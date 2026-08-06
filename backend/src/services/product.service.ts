@@ -7,6 +7,7 @@ const productView = (row: any) => row && ({
   id: row.id, type: row.type, brand: row.brand, model: row.model, name: row.name,
   tireWidth: row.tire_width, tireHeight: row.tire_height, rim: row.rim, tireCondition: row.tire_condition,
   boltPattern: row.bolt_pattern, wheelWidth: row.wheel_width, valveType: row.valve_type,
+  stockLocation: row.stock_location,
   purchasePrice: fromCents(row.purchase_price_cents), salePrice: fromCents(row.sale_price_cents),
   quantity: row.quantity, minimumQuantity: row.minimum_quantity, lowStock: row.quantity <= row.minimum_quantity,
   createdAt: row.created_at, updatedAt: row.updated_at,
@@ -47,7 +48,7 @@ export class ProductService {
     return {
       type: input.type, brand: input.brand ?? null, model: input.model ?? null, name: input.name ?? null,
       tireWidth: input.tireWidth ?? null, tireHeight: input.tireHeight ?? null, rim: input.rim ?? null,
-      tireCondition: input.tireCondition ?? null, boltPattern: input.boltPattern ?? null, wheelWidth: input.wheelWidth ?? null, valveType: input.valveType ?? null,
+      tireCondition: input.tireCondition ?? null, boltPattern: input.boltPattern ?? null, wheelWidth: input.wheelWidth ?? null, valveType: input.valveType ?? null, stockLocation: input.stockLocation ?? 'STOCK',
       purchasePriceCents: toCents(input.purchasePrice), salePriceCents: toCents(input.salePrice), quantity: input.quantity, minimumQuantity: input.minimumQuantity,
     };
   }

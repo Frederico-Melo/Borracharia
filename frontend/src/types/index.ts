@@ -1,9 +1,11 @@
 export type ProductType = 'TIRE' | 'WHEEL' | 'VALVE';
+export type StockLocation = 'PAINT_STOCK' | 'STOCK' | 'STORE';
 export type PaymentMethod = 'CASH' | 'PIX' | 'CARD' | 'OTHER';
 export type Product = {
   id: number; type: ProductType; brand?: string | null; model?: string | null; name?: string | null;
   tireWidth?: string | null; tireHeight?: string | null; rim?: string | null; tireCondition?: 'NOVO' | 'REMODELADO' | null;
   boltPattern?: string | null; wheelWidth?: string | null; valveType?: string | null;
+  stockLocation: StockLocation;
   purchasePrice: number; salePrice: number; quantity: number; minimumQuantity: number; lowStock: boolean;
 };
 export type CatalogService = { code: 'ALIGNMENT' | 'BALANCING'; name: string; price: number };

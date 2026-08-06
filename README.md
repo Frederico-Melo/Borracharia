@@ -6,6 +6,7 @@ Sistema completo, local e offline para gestão de borracharias. Foi construído 
 
 - Dashboard com vendas do dia/mês, lucro mensal, últimas vendas e alertas de estoque mínimo.
 - Cadastro de pneus, rodas e bicos sem código de barras, fotos ou fornecedores.
+- Localização por pneu: Estoque pintura, Estoque ou Loja.
 - Estoque auditável: entrada, saída, ajuste manual e baixa automática ao finalizar uma venda.
 - Nova venda com placa, veículo, múltiplos itens, alinhamento, balanceamento, mão de obra livre, descontos e formas de pagamento.
 - Histórico permanente de vendas com pesquisa, detalhes e edição apenas das observações.

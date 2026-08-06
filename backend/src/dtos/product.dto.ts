@@ -14,6 +14,7 @@ export const productSchema = z.object({
   boltPattern: nullableText,
   wheelWidth: nullableText,
   valveType: nullableText,
+  stockLocation: z.enum(['PAINT_STOCK', 'STOCK', 'STORE']).optional().nullable(),
   purchasePrice: z.coerce.number().min(0),
   salePrice: z.coerce.number().min(0),
   quantity: z.coerce.number().int().min(0),

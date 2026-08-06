@@ -19,9 +19,9 @@ export class ProductRepository {
 
   create(data: Record<string, unknown>) {
     const result = this.database.db.prepare(`INSERT INTO products (
-      type, brand, model, name, tire_width, tire_height, rim, tire_condition, bolt_pattern, wheel_width, valve_type,
+      type, brand, model, name, tire_width, tire_height, rim, tire_condition, bolt_pattern, wheel_width, valve_type, stock_location,
       purchase_price_cents, sale_price_cents, quantity, minimum_quantity
-    ) VALUES (@type, @brand, @model, @name, @tireWidth, @tireHeight, @rim, @tireCondition, @boltPattern, @wheelWidth, @valveType,
+    ) VALUES (@type, @brand, @model, @name, @tireWidth, @tireHeight, @rim, @tireCondition, @boltPattern, @wheelWidth, @valveType, @stockLocation,
       @purchasePriceCents, @salePriceCents, @quantity, @minimumQuantity)`).run(data);
     return this.findById(Number(result.lastInsertRowid));
   }
@@ -29,7 +29,7 @@ export class ProductRepository {
   update(id: number, data: Record<string, unknown>) {
     this.database.db.prepare(`UPDATE products SET
       brand=@brand, model=@model, name=@name, tire_width=@tireWidth, tire_height=@tireHeight, rim=@rim,
-      tire_condition=@tireCondition, bolt_pattern=@boltPattern, wheel_width=@wheelWidth, valve_type=@valveType,
+      tire_condition=@tireCondition, bolt_pattern=@boltPattern, wheel_width=@wheelWidth, valve_type=@valveType, stock_location=@stockLocation,
       purchase_price_cents=@purchasePriceCents, sale_price_cents=@salePriceCents, minimum_quantity=@minimumQuantity,
       updated_at=CURRENT_TIMESTAMP WHERE id=@id AND active=1`).run({ ...data, id });
     return this.findById(id);

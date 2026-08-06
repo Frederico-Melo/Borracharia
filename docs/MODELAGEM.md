@@ -11,7 +11,7 @@ erDiagram
 
 | Tabela | Finalidade |
 |---|---|
-| `products` | Pneus, rodas e bicos; campos específicos por tipo, preços, saldo e estoque mínimo. |
+| `products` | Pneus, rodas e bicos; campos específicos por tipo, localização do pneu, preços, saldo e estoque mínimo. |
 | `stock_movements` | Auditoria de estoque inicial, entrada, saída, ajuste e venda. |
 | `service_catalog` | Somente alinhamento e balanceamento, com preço editável. |
 | `sales` | Cabeçalho da venda: veículo, desconto, pagamento, totais, lucro e observação. |

@@ -11,3 +11,4 @@ export const productName = (product: { type: string; brand?: string | null; mode
 };
 export const paymentLabel: Record<string, string> = { CASH: 'Dinheiro', PIX: 'PIX', CARD: 'Cartão', OTHER: 'Outro' };
 export const categoryLabel: Record<string, string> = { SALE: 'Venda', EXPENSE: 'Despesa', PURCHASE: 'Compra', OTHER: 'Outro' };
+export const stockLocationLabel: Record<string, string> = { PAINT_STOCK: 'Estoque pintura', STOCK: 'Estoque', STORE: 'Loja' };
