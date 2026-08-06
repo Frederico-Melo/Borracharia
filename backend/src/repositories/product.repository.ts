@@ -8,8 +8,12 @@ export class ProductRepository {
     const values: unknown[] = [];
     if (params.type && ['TIRE', 'WHEEL', 'VALVE'].includes(params.type)) { where.push('type = ?'); values.push(params.type); }
     if (params.search) {
-      where.push("(COALESCE(brand,'') || ' ' || COALESCE(model,'') || ' ' || COALESCE(name,'') || ' ' || COALESCE(rim,'')) LIKE ?");
-      values.push(`%${params.search.trim()}%`);
+      const searchableFields = "UPPER(COALESCE(brand,'') || ' ' || COALESCE(model,'') || ' ' || COALESCE(name,'') || ' ' || COALESCE(tire_width,'') || ' ' || COALESCE(tire_height,'') || ' ' || COALESCE(rim,'') || ' ' || COALESCE(bolt_pattern,'') || ' ' || COALESCE(wheel_width,'') || ' ' || COALESCE(valve_type,''))";
+      const terms = params.search.toUpperCase().match(/[A-ZÀ-Ÿ]+\d+|[A-ZÀ-Ÿ]+|\d+/g) || [];
+      if (terms.length) {
+        where.push(`(${terms.map(() => `${searchableFields} LIKE ?`).join(' AND ')})`);
+        values.push(...terms.map((term) => `%${term}%`));
+      }
     }
     if (params.lowStock) where.push('quantity <= minimum_quantity');
     return this.database.db.prepare(`SELECT * FROM products WHERE ${where.join(' AND ')} ORDER BY quantity <= minimum_quantity DESC, type, brand, model, name`).all(...values);

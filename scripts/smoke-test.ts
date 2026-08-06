@@ -30,6 +30,9 @@ async function main() {
   });
   assert.equal(productResult.response.status, 201);
   const product = productResult.payload as { id: number };
+  const measureSearchResult = await request('/products?type=TIRE&search=205%2F55%20R16');
+  assert.equal(measureSearchResult.response.status, 200);
+  assert.equal((measureSearchResult.payload as Array<{ id: number }>)[0].id, product.id);
   const saleResult = await request('/sales', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ paymentMethod: 'PIX', discountType: 'FIXED', discountValue: 10, items: [{ itemType: 'PRODUCT', productId: product.id, description: 'Teste Seguro 205/55 R16', quantity: 2, unitPrice: 300 }, { itemType: 'LABOR', description: 'Serviço de teste', quantity: 1, unitPrice: 50 }] }),

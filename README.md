@@ -6,6 +6,7 @@ Sistema completo, local e offline para gestão de borracharias. Foi construído 
 
 - Dashboard com vendas do dia/mês, lucro mensal, últimas vendas e alertas de estoque mínimo.
 - Cadastro de pneus, rodas e bicos sem código de barras, fotos ou fornecedores.
+- Pesquisa de pneus por marca, modelo ou medida, incluindo formatos como `205/55 R16`.
 - Localização por pneu: Estoque pintura, Estoque ou Loja.
 - Opção de privacidade para ocultar os preços de compra nas listagens de estoque.
 - Estoque auditável: entrada, saída, ajuste manual e baixa automática ao finalizar uma venda.
