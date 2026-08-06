@@ -14,6 +14,7 @@ Base: `http://127.0.0.1:<porta>/api`. A porta é interna, aleatória e gerenciad
 | `GET/DELETE /sales/:id` | Detalhe completo ou exclusão com estorno de estoque e caixa. |
 | `PATCH /sales/:id/notes` | Altera apenas as observações. |
 | `GET/POST /cash` | Caixa e lançamento manual. |
+| `DELETE /cash/:id` | Exclui somente um lançamento manual do caixa. |
 | `GET /reports` | Indicadores e rankings por período. |
 | `GET/PUT /settings` | Preferências locais. |
 | `GET /backups/export` | Download de cópia consistente do banco. |

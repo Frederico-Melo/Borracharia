@@ -25,6 +25,7 @@ export const createRoutes = (controllers: { products: ProductController; sales: 
   router.delete('/sales/:id', controllers.sales.remove);
   router.get('/cash', controllers.cash.list);
   router.post('/cash', controllers.cash.create);
+  router.delete('/cash/:id', controllers.cash.remove);
   router.get('/reports', controllers.system.reportsData);
   router.get('/settings', controllers.system.getSettings);
   router.put('/settings', controllers.system.updateSettings);

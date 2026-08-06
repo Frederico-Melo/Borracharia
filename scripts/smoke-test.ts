@@ -51,6 +51,19 @@ async function main() {
   assert.equal((stockAfterRemoval.payload as Array<{ quantity: number }>)[0].quantity, 5);
   const cashAfterRemoval = await request('/cash');
   assert.equal((cashAfterRemoval.payload as { totals: { balance: number } }).totals.balance, 0);
+  const manualEntryResult = await request('/cash', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ entryType: 'OUT', category: 'EXPENSE', description: 'Despesa lançada por engano', amount: 45, occurredOn: '2026-08-06' }),
+  });
+  assert.equal(manualEntryResult.response.status, 201);
+  const cashWithManualEntry = await request('/cash');
+  const manualEntry = (cashWithManualEntry.payload as { entries: Array<{ id: number; description: string }>; totals: { balance: number } }).entries.find((entry) => entry.description === 'Despesa lançada por engano');
+  assert.ok(manualEntry);
+  assert.equal((cashWithManualEntry.payload as { totals: { balance: number } }).totals.balance, -45);
+  const removeManualEntryResult = await request(`/cash/${manualEntry.id}`, { method: 'DELETE' });
+  assert.equal(removeManualEntryResult.response.status, 204);
+  const cashAfterManualRemoval = await request('/cash');
+  assert.equal((cashAfterManualRemoval.payload as { totals: { balance: number } }).totals.balance, 0);
   console.log('Smoke test aprovado: venda, estorno, estoque, lucro e caixa estão integrados.');
   } finally {
     await new Promise<void>((resolve) => server.close(() => resolve()));

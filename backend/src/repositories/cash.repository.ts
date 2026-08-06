@@ -6,6 +6,8 @@ export class CashRepository {
     return this.database.db.prepare(`INSERT INTO cash_entries (sale_id,entry_type,category,description,amount_cents,occurred_on)
       VALUES (@saleId,@entryType,@category,@description,@amountCents,@occurredOn)`).run(data);
   }
+  findById(id: number) { return this.database.db.prepare('SELECT * FROM cash_entries WHERE id = ?').get(id) as any; }
+  remove(id: number) { this.database.db.prepare('DELETE FROM cash_entries WHERE id = ? AND sale_id IS NULL').run(id); }
   removeBySale(saleId: number) { this.database.db.prepare('DELETE FROM cash_entries WHERE sale_id = ?').run(saleId); }
   list(start?: string, end?: string) {
     const clauses: string[] = []; const values: unknown[] = [];

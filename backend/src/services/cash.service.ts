@@ -1,4 +1,5 @@
 import { CashRepository } from '../repositories/cash.repository';
+import { AppError } from '../lib/errors';
 import { fromCents, toCents } from '../lib/money';
 import { localDate } from '../lib/date';
 
@@ -14,5 +15,11 @@ export class CashService {
   }
   create(input: { entryType: 'IN' | 'OUT'; category: 'EXPENSE' | 'PURCHASE' | 'OTHER'; description: string; amount: number; occurredOn?: string }) {
     this.cash.add({ saleId: null, entryType: input.entryType, category: input.category, description: input.description, amountCents: toCents(input.amount), occurredOn: input.occurredOn || localDate() });
+  }
+  remove(id: number) {
+    const entry = this.cash.findById(id);
+    if (!entry) throw new AppError(404, 'Lançamento não encontrado.');
+    if (entry.sale_id !== null) throw new AppError(409, 'Lançamentos gerados por vendas só podem ser removidos ao excluir a venda no Histórico.');
+    this.cash.remove(id);
   }
 }

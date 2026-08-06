@@ -6,4 +6,5 @@ export class CashController {
   constructor(private readonly service: CashService) {}
   list = (req: Request, res: Response) => res.json(this.service.list(req.query as any));
   create = (req: Request, res: Response) => { this.service.create(cashEntrySchema.parse(req.body)); res.status(201).json({ ok: true }); };
+  remove = (req: Request, res: Response) => { this.service.remove(Number(req.params.id)); res.status(204).end(); };
 }
