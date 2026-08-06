@@ -1,7 +1,7 @@
 import { SettingsRepository } from '../repositories/settings.repository';
 
-export type AppSettings = { companyName: string; defaultMinimumStock: number; automaticBackup: boolean };
-const defaults: AppSettings = { companyName: 'Pneu Pro Gestão', defaultMinimumStock: 2, automaticBackup: true };
+export type AppSettings = { companyName: string; defaultMinimumStock: number; automaticBackup: boolean; hideCostInInventory: boolean };
+const defaults: AppSettings = { companyName: 'Pneu Pro Gestão', defaultMinimumStock: 2, automaticBackup: true, hideCostInInventory: false };
 
 export class SettingsService {
   constructor(private readonly settings: SettingsRepository) {}

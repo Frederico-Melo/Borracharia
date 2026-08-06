@@ -17,7 +17,7 @@ erDiagram
 | `sales` | Cabeçalho da venda: veículo, desconto, pagamento, totais, lucro e observação. |
 | `sale_items` | Produtos, serviços tabelados ou mão de obra; guarda preço/custo histórico. |
 | `cash_entries` | Entradas de venda e saídas/entradas manuais. |
-| `settings` | Nome da empresa, mínimo padrão e preferência de backup automático. |
+| `settings` | Nome da empresa, mínimo padrão, preferência de backup e opção de ocultar custos nas listagens. |
 | `schema_migrations` | Controle das migrations aplicadas. |
 
 ## Cálculos

@@ -13,4 +13,4 @@ export type SaleItem = { id: number; itemType: 'PRODUCT' | 'SERVICE' | 'LABOR'; 
 export type Sale = { id: number; saleNumber: string; vehiclePlate?: string | null; vehicleModel?: string | null; subtotal: number; discountType?: 'FIXED' | 'PERCENT' | null; discountValue: number; discount: number; total: number; profit: number; paymentMethod: PaymentMethod; notes?: string | null; soldAt: string; items: SaleItem[] };
 export type CashEntry = { id: number; saleId?: number | null; entryType: 'IN' | 'OUT'; category: 'SALE' | 'EXPENSE' | 'PURCHASE' | 'OTHER'; description: string; amount: number; occurredOn: string };
 export type Dashboard = { todaySales: number; todayCount: number; monthSales: number; monthProfit: number; lowStock: Product[]; recentSales: Array<{ id: number; saleNumber: string; vehiclePlate?: string; vehicleModel?: string; total: number; paymentMethod: PaymentMethod; soldAt: string }> };
-export type Settings = { companyName: string; defaultMinimumStock: number; automaticBackup: boolean };
+export type Settings = { companyName: string; defaultMinimumStock: number; automaticBackup: boolean; hideCostInInventory: boolean };

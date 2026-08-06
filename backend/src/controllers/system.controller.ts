@@ -11,7 +11,7 @@ export class SystemController {
   dashboardData = (_req: Request, res: Response) => res.json(this.dashboard.get());
   reportsData = (req: Request, res: Response) => res.json(this.reports.get(req.query as any));
   getSettings = (_req: Request, res: Response) => res.json(this.settings.get());
-  updateSettings = (req: Request, res: Response) => res.json(this.settings.update(z.object({ companyName: z.string().trim().min(1).max(80).optional(), defaultMinimumStock: z.coerce.number().int().min(0).optional(), automaticBackup: z.boolean().optional() }).parse(req.body)));
+  updateSettings = (req: Request, res: Response) => res.json(this.settings.update(z.object({ companyName: z.string().trim().min(1).max(80).optional(), defaultMinimumStock: z.coerce.number().int().min(0).optional(), automaticBackup: z.boolean().optional(), hideCostInInventory: z.boolean().optional() }).parse(req.body)));
   exportBackup = (_req: Request, res: Response) => {
     const file = this.backups.exportTemporary();
     res.download(file, `backup-pneu-pro-${new Date().toISOString().slice(0, 10)}.db`, () => { if (fs.existsSync(file)) fs.rmSync(file); });

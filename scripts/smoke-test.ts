@@ -21,6 +21,9 @@ async function main() {
     return { response, payload };
   };
   try {
+  const settingsResult = await request('/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ hideCostInInventory: true }) });
+  assert.equal(settingsResult.response.status, 200);
+  assert.equal((settingsResult.payload as { hideCostInInventory: boolean }).hideCostInInventory, true);
   const productResult = await request('/products', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'TIRE', brand: 'Teste', model: 'Seguro', tireWidth: '205', tireHeight: '55', rim: 'R16', tireCondition: 'NOVO', purchasePrice: 200, salePrice: 300, quantity: 5, minimumQuantity: 2 }),
