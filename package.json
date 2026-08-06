@@ -1,0 +1,60 @@
+{
+  "name": "pneu-pro-gestao",
+  "version": "1.0.1",
+  "private": true,
+  "description": "Sistema offline de gestão para borracharias.",
+  "author": "Pneu Pro Gestão",
+  "main": "dist/electron/main.js",
+  "scripts": {
+    "dev": "concurrently -k \"vite --host 127.0.0.1\" \"wait-on tcp:127.0.0.1:5173 && electron -r tsx/cjs electron/main.ts\"",
+    "build": "npm run build:frontend && npm run build:electron",
+    "build:frontend": "vite build",
+    "build:electron": "tsup electron/main.ts --format cjs --target node20 --external electron --out-dir dist/electron && copy electron\\preload.cjs dist\\electron\\preload.cjs",
+    "start": "electron .",
+    "dist": "npm run build && electron-builder --win nsis --publish never",
+    "typecheck": "tsc --noEmit",
+    "db:seed": "tsx database/seed/seed.ts",
+    "test": "vitest run --config vitest.config.ts"
+  },
+  "build": {
+    "appId": "br.com.pneupro.gestao",
+    "productName": "Pneu Pro Gestão",
+    "artifactName": "Pneu-Pro-Gestao-Setup-${version}.${ext}",
+    "directories": { "output": "release" },
+    "npmRebuild": false,
+    "nodeGypRebuild": false,
+    "files": ["dist/**", "package.json", "node_modules/**"],
+    "extraResources": [{ "from": "database/migrations", "to": "migrations" }],
+    "win": { "target": ["nsis"], "requestedExecutionLevel": "asInvoker", "signAndEditExecutable": false },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true }
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "concurrently": "^9.1.0",
+    "electron-builder": "^25.1.8",
+    "electron": "^33.2.1",
+    "tsx": "^4.19.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3",
+    "vitest": "^2.1.8",
+    "wait-on": "^8.0.1",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.1.1",
+    "xlsx": "^0.18.5"
+  }
+}

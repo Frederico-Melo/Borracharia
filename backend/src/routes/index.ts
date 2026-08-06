@@ -1,0 +1,34 @@
+import { Router } from 'express';
+import { ProductController } from '../controllers/product.controller';
+import { SaleController } from '../controllers/sale.controller';
+import { CashController } from '../controllers/cash.controller';
+import { CatalogController } from '../controllers/catalog.controller';
+import { SystemController } from '../controllers/system.controller';
+
+export const createRoutes = (controllers: { products: ProductController; sales: SaleController; cash: CashController; catalog: CatalogController; system: SystemController }) => {
+  const router = Router();
+  router.get('/health', (_req, res) => res.json({ status: 'ok' }));
+  router.get('/dashboard', controllers.system.dashboardData);
+  router.get('/products', controllers.products.list);
+  router.post('/products', controllers.products.create);
+  router.get('/products/:id', controllers.products.get);
+  router.put('/products/:id', controllers.products.update);
+  router.delete('/products/:id', controllers.products.remove);
+  router.get('/products/:id/movements', controllers.products.movements);
+  router.post('/products/:id/stock', controllers.products.move);
+  router.get('/services', controllers.catalog.list);
+  router.put('/services/:code', controllers.catalog.save);
+  router.get('/sales', controllers.sales.list);
+  router.post('/sales', controllers.sales.create);
+  router.get('/sales/:id', controllers.sales.get);
+  router.patch('/sales/:id/notes', controllers.sales.notes);
+  router.delete('/sales/:id', controllers.sales.remove);
+  router.get('/cash', controllers.cash.list);
+  router.post('/cash', controllers.cash.create);
+  router.get('/reports', controllers.system.reportsData);
+  router.get('/settings', controllers.system.getSettings);
+  router.put('/settings', controllers.system.updateSettings);
+  router.get('/backups/export', controllers.system.exportBackup);
+  router.post('/backups/import', controllers.system.importBackup);
+  return router;
+};
