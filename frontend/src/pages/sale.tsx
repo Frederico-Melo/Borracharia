@@ -13,7 +13,10 @@ export function SalePage() {
   const { success, error } = useToast(); const [products, setProducts] = useState<Product[]>(); const [services, setServices] = useState<CatalogService[]>(); const [query, setQuery] = useState(''); const [items, setItems] = useState<CartItem[]>([]); const [vehiclePlate, setVehiclePlate] = useState(''); const [vehicleModel, setVehicleModel] = useState(''); const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('PIX'); const [discountType, setDiscountType] = useState<'' | 'FIXED' | 'PERCENT'>(''); const [discountValue, setDiscountValue] = useState(0); const [notes, setNotes] = useState(''); const [labor, setLabor] = useState({ description: '', price: '' }); const [saving, setSaving] = useState(false);
   const reload = () => { api<Product[]>('/products').then(setProducts).catch((err) => error(err.message)); api<CatalogService[]>('/services').then(setServices).catch((err) => error(err.message)); };
   useEffect(reload, []);
-  const filtered = useMemo(() => (products || []).filter((product) => product.quantity > 0 && productName(product).toLowerCase().includes(query.toLowerCase())).slice(0, 9), [products, query]);
+  const filtered = useMemo(() => {
+    const terms = query.toUpperCase().match(/[A-ZÀ-Ÿ]+\d+|[A-ZÀ-Ÿ]+|\d+/g) || [];
+    return (products || []).filter((product) => product.quantity > 0 && terms.every((term) => productName(product).toUpperCase().includes(term))).slice(0, 9);
+  }, [products, query]);
   const subtotal = items.reduce((total, item) => total + item.unitPrice * item.quantity, 0);
   const discount = discountType === 'PERCENT' ? Math.min(subtotal, subtotal * discountValue / 100) : discountType === 'FIXED' ? Math.min(subtotal, discountValue) : 0;
   const total = subtotal - discount;
