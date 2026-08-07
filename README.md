@@ -69,7 +69,7 @@ O Electron inicia a API local em uma porta aleatória no próprio computador. A 
 - Valores são armazenados em centavos no banco para não sofrer erros de arredondamento.
 - Uma venda é uma transação única: estoque, itens da venda e caixa são gravados juntos ou nenhuma alteração é feita.
 - O lucro de uma venda é `total pago − custo dos produtos`; serviços e mão de obra entram integralmente no lucro.
-- Produtos usados em vendas são arquivados, não apagados fisicamente, para preservar o histórico.
+- Produtos usados em vendas são arquivados para preservar o histórico; produtos sem vendas podem ser excluídos junto às suas movimentações internas.
 - A quantidade só é mudada pela tela Estoque ou por uma venda, mantendo o histórico de cada alteração.
 - Ao excluir uma venda pelo Histórico, seus produtos retornam ao estoque e a entrada correspondente é removida do caixa.
 

@@ -55,6 +55,9 @@ export class ProductRepository {
   remove(id: number) {
     const inSales = this.database.db.prepare('SELECT 1 FROM sale_items WHERE product_id = ? LIMIT 1').get(id);
     if (inSales) this.database.db.prepare('UPDATE products SET active=0, updated_at=CURRENT_TIMESTAMP WHERE id=?').run(id);
-    else this.database.db.prepare('DELETE FROM products WHERE id=?').run(id);
+    else this.database.db.transaction(() => {
+      this.database.db.prepare('DELETE FROM stock_movements WHERE product_id = ?').run(id);
+      this.database.db.prepare('DELETE FROM products WHERE id = ?').run(id);
+    })();
   }
 }

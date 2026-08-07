@@ -30,6 +30,16 @@ async function main() {
   });
   assert.equal(productResult.response.status, 201);
   const product = productResult.payload as { id: number };
+  const removableProductResult = await request('/products', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'VALVE', name: 'Bico de teste removível', purchasePrice: 5, salePrice: 10, quantity: 3, minimumQuantity: 1 }),
+  });
+  assert.equal(removableProductResult.response.status, 201);
+  const removableProduct = removableProductResult.payload as { id: number };
+  const removeUnsoldProductResult = await request(`/products/${removableProduct.id}`, { method: 'DELETE' });
+  assert.equal(removeUnsoldProductResult.response.status, 204);
+  const productsAfterUnsoldRemoval = await request('/products');
+  assert.equal((productsAfterUnsoldRemoval.payload as Array<{ id: number }>).some((item) => item.id === removableProduct.id), false);
   const dashboardBeforeSale = await request('/dashboard');
   assert.equal((dashboardBeforeSale.payload as { stockValue: { total: number; tires: number; wheels: number; valves: number } }).stockValue.total, 1500);
   assert.equal((dashboardBeforeSale.payload as { stockValue: { tires: number } }).stockValue.tires, 1500);
