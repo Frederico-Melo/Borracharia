@@ -5,6 +5,7 @@ Sistema completo, local e offline para gestão de borracharias. Foi construído 
 ## Funcionalidades
 
 - Dashboard com vendas do dia/mês, lucro mensal, últimas vendas e alertas de estoque mínimo.
+- Resumo de estoque no Dashboard: total geral e total de pneus, rodas e bicos.
 - Cadastro de pneus, rodas e bicos sem código de barras, fotos ou fornecedores.
 - Pesquisa de pneus por marca, modelo ou medida, incluindo formatos como `205/55 R16`.
 - Localização por pneu: Estoque pintura, Estoque ou Loja.

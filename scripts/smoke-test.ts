@@ -30,6 +30,11 @@ async function main() {
   });
   assert.equal(productResult.response.status, 201);
   const product = productResult.payload as { id: number };
+  const dashboardBeforeSale = await request('/dashboard');
+  assert.equal((dashboardBeforeSale.payload as { stockSummary: { total: number; tires: number; wheels: number; valves: number } }).stockSummary.total, 5);
+  assert.equal((dashboardBeforeSale.payload as { stockSummary: { tires: number } }).stockSummary.tires, 5);
+  assert.equal((dashboardBeforeSale.payload as { stockSummary: { wheels: number; valves: number } }).stockSummary.wheels, 0);
+  assert.equal((dashboardBeforeSale.payload as { stockSummary: { wheels: number; valves: number } }).stockSummary.valves, 0);
   const measureSearchResult = await request('/products?type=TIRE&search=205%2F55%20R16');
   assert.equal(measureSearchResult.response.status, 200);
   assert.equal((measureSearchResult.payload as Array<{ id: number }>)[0].id, product.id);
