@@ -79,7 +79,11 @@ export class SaleService {
     return saleView(createSale());
   }
 
-  list(filters: { plate?: string; startDate?: string; endDate?: string; term?: string }) { return this.sales.list(filters).map(saleView); }
+  list(filters: { plate?: string; startDate?: string; endDate?: string; term?: string; page?: string }) {
+    const requestedPage = Math.max(1, Math.floor(Number(filters.page) || 1));
+    const { sales, ...pagination } = this.sales.list({ ...filters, page: requestedPage, pageSize: 10 });
+    return { ...pagination, items: sales.map(saleView) };
+  }
   get(id: number) { const sale = saleView(this.sales.find(id)); if (!sale) throw new AppError(404, 'Venda não encontrada.'); return sale; }
   updateNotes(id: number, notes: string | null) { this.get(id); return saleView(this.sales.updateNotes(id, notes)); }
   remove(id: number) {

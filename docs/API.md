@@ -10,7 +10,7 @@ Base: `http://127.0.0.1:<porta>/api`. A porta é interna, aleatória e gerenciad
 | `POST /products/:id/stock` | Entrada, saída ou ajuste de estoque. |
 | `GET /products/:id/movements` | Histórico de estoque. |
 | `GET/PUT /services/:code` | Consulta ou atualiza alinhamento/balanceamento. |
-| `GET/POST /sales` | Histórico filtrado ou criação de venda transacional. |
+| `GET/POST /sales` | Histórico paginado (10 vendas por página) ou criação de venda transacional. |
 | `GET/DELETE /sales/:id` | Detalhe completo ou exclusão com estorno de estoque e caixa. |
 | `PATCH /sales/:id/notes` | Altera apenas as observações. |
 | `GET/POST /cash` | Caixa e lançamento manual. |

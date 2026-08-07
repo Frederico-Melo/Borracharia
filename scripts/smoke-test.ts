@@ -41,6 +41,27 @@ async function main() {
   const sale = saleResult.payload as { id: number; total: number; profit: number };
   assert.equal(sale.total, 640);
   assert.equal(sale.profit, 240);
+  const extraSales: Array<{ id: number }> = [];
+  for (let index = 0; index < 10; index += 1) {
+    const extraSaleResult = await request('/sales', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paymentMethod: 'CASH', items: [{ itemType: 'LABOR', description: `Serviço paginado ${index + 1}`, quantity: 1, unitPrice: 10 }] }),
+    });
+    assert.equal(extraSaleResult.response.status, 201);
+    extraSales.push(extraSaleResult.payload as { id: number });
+  }
+  const pagedHistory = await request('/sales?page=1');
+  assert.equal(pagedHistory.response.status, 200);
+  assert.equal((pagedHistory.payload as { pageSize: number }).pageSize, 10);
+  assert.equal((pagedHistory.payload as { total: number }).total, 11);
+  assert.equal((pagedHistory.payload as { items: Array<{ id: number }> }).items.length, 10);
+  const secondHistoryPage = await request('/sales?page=2');
+  assert.equal((secondHistoryPage.payload as { page: number }).page, 2);
+  assert.equal((secondHistoryPage.payload as { items: Array<{ id: number }> }).items.length, 1);
+  for (const extraSale of extraSales) {
+    const removeExtraSaleResult = await request(`/sales/${extraSale.id}`, { method: 'DELETE' });
+    assert.equal(removeExtraSaleResult.response.status, 204);
+  }
   const stockResult = await request('/products');
   assert.equal((stockResult.payload as Array<{ quantity: number }>)[0].quantity, 3);
   const cashResult = await request('/cash');

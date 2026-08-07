@@ -11,7 +11,7 @@ Sistema completo, local e offline para gestão de borracharias. Foi construído 
 - Opção de privacidade para ocultar os preços de compra nas listagens de estoque.
 - Estoque auditável: entrada, saída, ajuste manual e baixa automática ao finalizar uma venda.
 - Nova venda com placa, veículo, múltiplos itens, alinhamento, balanceamento, mão de obra livre, descontos e formas de pagamento.
-- Histórico permanente de vendas com pesquisa, detalhes e edição apenas das observações.
+- Histórico permanente de vendas com pesquisa, detalhes, edição apenas das observações e paginação de 10 vendas por vez.
 - Caixa com entradas automáticas das vendas e lançamentos manuais de despesas, compras e outras movimentações.
 - Relatórios de faturamento/lucro diário, produtos e serviços mais vendidos, exportáveis para PDF e Excel.
 - SQLite local com migrations, transações, backup automático diário, exportação e restauração segura.

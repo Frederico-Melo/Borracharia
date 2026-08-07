@@ -19,7 +19,7 @@ export class SaleRepository {
       VALUES (@saleId,@itemType,@productId,@serviceCode,@description,@quantity,@unitPriceCents,@unitCostCents,@totalCents)`).run(data);
   }
 
-  list(params: { plate?: string; startDate?: string; endDate?: string; term?: string }) {
+  list(params: { plate?: string; startDate?: string; endDate?: string; term?: string; page?: number; pageSize?: number }) {
     const where: string[] = [];
     const values: unknown[] = [];
     if (params.plate) { where.push('UPPER(s.vehicle_plate) LIKE ?'); values.push(`%${params.plate.toUpperCase()}%`); }
@@ -29,9 +29,14 @@ export class SaleRepository {
       where.push(`(s.vehicle_model LIKE ? OR s.vehicle_plate LIKE ? OR EXISTS (SELECT 1 FROM sale_items sx WHERE sx.sale_id=s.id AND sx.description LIKE ?))`);
       values.push(`%${params.term}%`, `%${params.term}%`, `%${params.term}%`);
     }
-    const sql = `SELECT s.* FROM sales s ${where.length ? `WHERE ${where.join(' AND ')}` : ''} ORDER BY s.sold_at DESC LIMIT 500`;
-    const sales = this.database.db.prepare(sql).all(...values) as any[];
-    return sales.map((sale) => ({ ...sale, items: this.items(sale.id) }));
+    const from = `FROM sales s ${where.length ? `WHERE ${where.join(' AND ')}` : ''}`;
+    const total = Number((this.database.db.prepare(`SELECT COUNT(*) AS total ${from}`).get(...values) as { total: number }).total);
+    const pageSize = Math.min(100, Math.max(1, params.pageSize || 10));
+    const pages = Math.max(1, Math.ceil(total / pageSize));
+    const page = Math.min(Math.max(1, params.page || 1), pages);
+    const sql = `SELECT s.* ${from} ORDER BY s.sold_at DESC LIMIT ? OFFSET ?`;
+    const sales = this.database.db.prepare(sql).all(...values, pageSize, (page - 1) * pageSize) as any[];
+    return { sales: sales.map((sale) => ({ ...sale, items: this.items(sale.id) })), total, page, pages, pageSize };
   }
 
   items(saleId: number) { return this.database.db.prepare('SELECT * FROM sale_items WHERE sale_id=? ORDER BY id').all(saleId); }
