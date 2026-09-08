@@ -26,7 +26,8 @@ Base: `http://127.0.0.1:<porta>/api`. A porta é interna, aleatória e gerenciad
 {
   "vehiclePlate": "ABC1D23",
   "vehicleModel": "Onix 1.0",
-  "paymentMethod": "PIX",
+  "paymentMethod": "CARD",
+  "cardInstallments": 3,
   "discountType": "PERCENT",
   "discountValue": 5,
   "items": [
@@ -37,3 +38,5 @@ Base: `http://127.0.0.1:<porta>/api`. A porta é interna, aleatória e gerenciad
   ]
 }
 ```
+
+Em cartão, o sistema calcula internamente a taxa por parcela e ignora qualquer valor de taxa enviado pela interface. As taxas configuradas são: `1x = 0%`, `2x = 3,99%`, `3x = 4,99%`, `4x = 6,59%`, `5x = 7,09%`, `6x = 7,69%`, `7x = 7,89%`, `8x = 8,59%`, `9x = 9,26%`, `10x = 9,99%`, `11x = 11,79%` e `12x = 11,99%`.

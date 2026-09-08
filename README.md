@@ -12,6 +12,7 @@ Sistema completo, local e offline para gestão de borracharias. Foi construído 
 - Opção de privacidade para ocultar os preços de compra nas listagens de estoque.
 - Estoque auditável: entrada, saída, ajuste manual e baixa automática ao finalizar uma venda.
 - Nova venda com placa, veículo, múltiplos itens, alinhamento, balanceamento, mão de obra livre, peças avulsas sem estoque (com custo e preço de venda), descontos e formas de pagamento.
+- Pagamento no cartão de 1x a 12x: taxa automática, total no cartão, valor de cada parcela e valor líquido gravados no Histórico, Caixa e Relatórios desde a venda.
 - Histórico permanente de vendas com pesquisa, detalhes, edição apenas das observações e paginação de 10 vendas por vez.
 - Caixa com entradas automáticas das vendas e lançamentos manuais de despesas, compras e outras movimentações.
 - Relatórios de faturamento/lucro diário, produtos e serviços mais vendidos, exportáveis para PDF e Excel.
@@ -68,7 +69,7 @@ O Electron inicia a API local em uma porta aleatória no próprio computador. A 
 
 - Valores são armazenados em centavos no banco para não sofrer erros de arredondamento.
 - Uma venda é uma transação única: estoque, itens da venda e caixa são gravados juntos ou nenhuma alteração é feita.
-- O lucro de uma venda é `total pago − custo dos produtos e peças avulsas`; serviços e mão de obra entram integralmente no lucro.
+- O lucro de uma venda é `valor líquido recebido − custo dos produtos e peças avulsas`; serviços e mão de obra entram integralmente no lucro. A taxa do cartão é repassada automaticamente ao cliente quando há parcelamento.
 - Produtos usados em vendas são arquivados para preservar o histórico; produtos sem vendas podem ser excluídos junto às suas movimentações internas.
 - A quantidade só é mudada pela tela Estoque ou por uma venda, mantendo o histórico de cada alteração.
 - Ao excluir uma venda pelo Histórico, seus produtos retornam ao estoque e a entrada correspondente é removida do caixa.

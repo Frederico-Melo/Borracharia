@@ -6,9 +6,11 @@ export class SaleRepository {
   create(data: Record<string, unknown>) {
     const result = this.database.db.prepare(`INSERT INTO sales (
       sale_number, vehicle_plate, vehicle_model, subtotal_cents, discount_type, discount_value, discount_cents,
-      total_cents, profit_cents, payment_method, notes, sold_at
+      total_cents, profit_cents, payment_method, card_installments, card_fee_bps, card_fee_cents,
+      card_gross_cents, card_installment_cents, notes, sold_at
     ) VALUES (@saleNumber, @vehiclePlate, @vehicleModel, @subtotalCents, @discountType, @discountValue, @discountCents,
-      @totalCents, @profitCents, @paymentMethod, @notes, @soldAt)`).run(data);
+      @totalCents, @profitCents, @paymentMethod, @cardInstallments, @cardFeeBps, @cardFeeCents,
+      @cardGrossCents, @cardInstallmentCents, @notes, @soldAt)`).run(data);
     return Number(result.lastInsertRowid);
   }
 

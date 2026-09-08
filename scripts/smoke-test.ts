@@ -94,6 +94,23 @@ async function main() {
   assert.equal((stockAfterRemoval.payload as Array<{ quantity: number }>)[0].quantity, 5);
   const cashAfterRemoval = await request('/cash');
   assert.equal((cashAfterRemoval.payload as { totals: { balance: number } }).totals.balance, 0);
+  const cardSaleResult = await request('/sales', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ paymentMethod: 'CARD', cardInstallments: 2, items: [{ itemType: 'LABOR', description: 'Serviço no cartão', quantity: 1, unitPrice: 100 }] }),
+  });
+  assert.equal(cardSaleResult.response.status, 201);
+  const cardSale = cardSaleResult.payload as { id: number; total: number; profit: number; cardInstallments: number; cardFeeRate: number; cardFee: number; cardGrossTotal: number; cardInstallmentAmount: number };
+  assert.deepEqual({ total: cardSale.total, profit: cardSale.profit, installments: cardSale.cardInstallments, rate: cardSale.cardFeeRate, fee: cardSale.cardFee, gross: cardSale.cardGrossTotal, installment: cardSale.cardInstallmentAmount }, { total: 100, profit: 100, installments: 2, rate: 3.99, fee: 4.16, gross: 104.16, installment: 52.08 });
+  const cardHistory = await request(`/sales/${cardSale.id}`);
+  assert.equal((cardHistory.payload as { cardInstallments: number; cardGrossTotal: number }).cardInstallments, 2);
+  assert.equal((cardHistory.payload as { cardInstallments: number; cardGrossTotal: number }).cardGrossTotal, 104.16);
+  const cashWithCard = await request('/cash');
+  assert.equal((cashWithCard.payload as { totals: { balance: number } }).totals.balance, 100);
+  assert.ok((cashWithCard.payload as { entries: Array<{ description: string }> }).entries.some((entry) => entry.description.includes('Cartão 2x')));
+  const removeCardSaleResult = await request(`/sales/${cardSale.id}`, { method: 'DELETE' });
+  assert.equal(removeCardSaleResult.response.status, 204);
+  const cashAfterCardRemoval = await request('/cash');
+  assert.equal((cashAfterCardRemoval.payload as { totals: { balance: number } }).totals.balance, 0);
   const manualEntryResult = await request('/cash', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ entryType: 'OUT', category: 'EXPENSE', description: 'Despesa lançada por engano', amount: 45, occurredOn: '2026-08-06' }),
@@ -107,7 +124,7 @@ async function main() {
   assert.equal(removeManualEntryResult.response.status, 204);
   const cashAfterManualRemoval = await request('/cash');
   assert.equal((cashAfterManualRemoval.payload as { totals: { balance: number } }).totals.balance, 0);
-  console.log('Smoke test aprovado: venda, estorno, estoque, lucro e caixa estão integrados.');
+  console.log('Smoke test aprovado: venda, cartão parcelado, estorno, estoque, lucro e caixa estão integrados.');
   } finally {
     await new Promise<void>((resolve) => server.close(() => resolve()));
     backend.database.close();
