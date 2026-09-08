@@ -36,13 +36,13 @@ sequenceDiagram
   UI->>API: itens, desconto e pagamento
   API->>DB: valida saldo de cada produto
   API->>DB: cria venda e itens
-  API->>DB: baixa estoque e grava movimentos
+  API->>DB: baixa somente os produtos de estoque e grava movimentos
   API->>DB: registra entrada no caixa
   API->>DB: commit único
   API-->>UI: número, total e lucro
 ```
 
-Caso um produto não tenha saldo ou qualquer etapa apresente erro, a transação é desfeita integralmente. O sistema não deixa uma venda gravada sem movimentar estoque e caixa.
+Caso um produto não tenha saldo ou qualquer etapa apresente erro, a transação é desfeita integralmente. Peças avulsas ficam somente na venda — com seu custo histórico — e não movimentam estoque. O sistema não deixa uma venda gravada sem atualizar estoque aplicável e caixa.
 
 ## Segurança e confiabilidade
 

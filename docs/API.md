@@ -32,7 +32,8 @@ Base: `http://127.0.0.1:<porta>/api`. A porta é interna, aleatória e gerenciad
   "items": [
     { "itemType": "PRODUCT", "productId": 1, "description": "Michelin Primacy 4 205/55 R16", "quantity": 2, "unitPrice": 690 },
     { "itemType": "SERVICE", "serviceCode": "ALIGNMENT", "description": "Alinhamento", "quantity": 1, "unitPrice": 100 },
-    { "itemType": "LABOR", "description": "Troca de pastilhas", "quantity": 1, "unitPrice": 80 }
+    { "itemType": "LABOR", "description": "Troca de pastilhas", "quantity": 1, "unitPrice": 80 },
+    { "itemType": "PART", "description": "Pastilha de freio", "quantity": 1, "unitCost": 120, "unitPrice": 180 }
   ]
 }
 ```

@@ -43,6 +43,7 @@ export class SaleService {
         const priceCents = toCents(item.unitPrice);
         let costCents = 0;
         if (item.itemType === 'PRODUCT') costCents = inventory.get(item.productId!)!.purchase_price_cents;
+        if (item.itemType === 'PART') costCents = toCents(item.unitCost!);
         if (item.itemType === 'SERVICE') {
           const service = this.catalog.find(item.serviceCode!);
           if (!service) throw new AppError(400, 'Serviço tabelado inválido.');

@@ -52,12 +52,17 @@ async function main() {
   assert.equal((measureSearchResult.payload as Array<{ id: number }>)[0].id, product.id);
   const saleResult = await request('/sales', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ paymentMethod: 'PIX', discountType: 'FIXED', discountValue: 10, items: [{ itemType: 'PRODUCT', productId: product.id, description: 'Teste Seguro 205/55 R16', quantity: 2, unitPrice: 300 }, { itemType: 'LABOR', description: 'Serviço de teste', quantity: 1, unitPrice: 50 }] }),
+    body: JSON.stringify({ paymentMethod: 'PIX', discountType: 'FIXED', discountValue: 10, items: [{ itemType: 'PRODUCT', productId: product.id, description: 'Teste Seguro 205/55 R16', quantity: 2, unitPrice: 300 }, { itemType: 'LABOR', description: 'Serviço de teste', quantity: 1, unitPrice: 50 }, { itemType: 'PART', description: 'Pastilha de teste', quantity: 1, unitPrice: 50, unitCost: 30 }] }),
   });
   assert.equal(saleResult.response.status, 201);
   const sale = saleResult.payload as { id: number; total: number; profit: number };
-  assert.equal(sale.total, 640);
-  assert.equal(sale.profit, 240);
+  assert.equal(sale.total, 690);
+  assert.equal(sale.profit, 260);
+  const savedSale = await request(`/sales/${sale.id}`);
+  assert.equal((savedSale.payload as { items: Array<{ itemType: string; unitCost: number }> }).items.find((item) => item.itemType === 'PART')?.unitCost, 30);
+  const reportWithPart = await request('/reports');
+  assert.equal((reportWithPart.payload as { parts: Array<{ description: string; quantity: number; revenue: number }> }).parts[0].description, 'Pastilha de teste');
+  assert.equal((reportWithPart.payload as { parts: Array<{ description: string; quantity: number; revenue: number }> }).parts[0].revenue, 50);
   const extraSales: Array<{ id: number }> = [];
   for (let index = 0; index < 10; index += 1) {
     const extraSaleResult = await request('/sales', {
@@ -82,7 +87,7 @@ async function main() {
   const stockResult = await request('/products');
   assert.equal((stockResult.payload as Array<{ quantity: number }>)[0].quantity, 3);
   const cashResult = await request('/cash');
-  assert.equal((cashResult.payload as { totals: { balance: number } }).totals.balance, 640);
+  assert.equal((cashResult.payload as { totals: { balance: number } }).totals.balance, 690);
   const removeResult = await request(`/sales/${sale.id}`, { method: 'DELETE' });
   assert.equal(removeResult.response.status, 204);
   const stockAfterRemoval = await request('/products');
