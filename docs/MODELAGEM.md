@@ -31,4 +31,4 @@ erDiagram
 
 O desconto é aplicado ao lucro da venda. Como não há custo direto cadastrado para alinhamento, balanceamento e mão de obra, esses itens entram com custo zero. Cada peça avulsa registra seu próprio custo no momento da venda e não gera movimentação de estoque.
 
-As vendas no cartão ficam registradas imediatamente, mesmo antes do repasse da maquininha. A venda guarda número de parcelas, taxa aplicada, total cobrado, valor de cada parcela e valor líquido para preservar o histórico.
+As vendas no cartão ficam registradas imediatamente, mesmo antes do repasse da maquininha. A venda guarda número de parcelas, taxa aplicada, se a taxa foi repassada ou absorvida, total cobrado, valor de cada parcela e valor líquido para preservar o histórico.

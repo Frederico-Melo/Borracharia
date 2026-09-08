@@ -20,6 +20,7 @@ const saleView = (sale: any) => sale && ({
   cardFee: sale.card_fee_cents === null || sale.card_fee_cents === undefined ? null : fromCents(sale.card_fee_cents),
   cardGrossTotal: sale.card_gross_cents === null || sale.card_gross_cents === undefined ? null : fromCents(sale.card_gross_cents),
   cardInstallmentAmount: sale.card_installment_cents === null || sale.card_installment_cents === undefined ? null : fromCents(sale.card_installment_cents),
+  cardFeePassed: sale.card_fee_passed === null || sale.card_fee_passed === undefined ? null : Boolean(sale.card_fee_passed),
   notes: sale.notes, soldAt: sale.sold_at,
   items: (sale.items || []).map((item: any) => ({ id: item.id, itemType: item.item_type, productId: item.product_id, serviceCode: item.service_code, description: item.description, quantity: item.quantity, unitPrice: fromCents(item.unit_price_cents), unitCost: fromCents(item.unit_cost_cents), total: fromCents(item.total_cents) })),
 });
@@ -63,7 +64,7 @@ export class SaleService {
         ? Math.round(subtotalCents * discountValue / 100)
         : discountType === 'FIXED' ? Math.min(subtotalCents, toCents(discountValue)) : 0;
       const desiredTotalCents = subtotalCents - discountCents;
-      const cardPayment = input.paymentMethod === 'CARD' ? calculateCardPayment(desiredTotalCents, input.cardInstallments!) : null;
+      const cardPayment = input.paymentMethod === 'CARD' ? calculateCardPayment(desiredTotalCents, input.cardInstallments!, input.cardFeePassed !== false) : null;
       const totalCents = cardPayment?.netCents ?? desiredTotalCents;
       const totalCostCents = normalized.reduce((sum, item) => sum + item.costCents * item.quantity, 0);
       const id = this.sales.create({
@@ -71,7 +72,7 @@ export class SaleService {
         subtotalCents, discountType, discountValue: discountType === 'PERCENT' ? Math.round(discountValue * 100) : toCents(discountValue),
         discountCents, totalCents, profitCents: totalCents - totalCostCents, paymentMethod: input.paymentMethod,
         cardInstallments: cardPayment?.installments ?? null, cardFeeBps: cardPayment?.feeBps ?? null, cardFeeCents: cardPayment?.feeCents ?? null,
-        cardGrossCents: cardPayment?.grossCents ?? null, cardInstallmentCents: cardPayment?.installmentCents ?? null,
+        cardGrossCents: cardPayment?.grossCents ?? null, cardInstallmentCents: cardPayment?.installmentCents ?? null, cardFeePassed: cardPayment ? Number(cardPayment.feePassed) : null,
         notes: input.notes || null, soldAt: localDateTime(),
       });
       const saleNumber = `V${localDate().replaceAll('-', '')}-${String(id).padStart(5, '0')}`;
@@ -85,7 +86,7 @@ export class SaleService {
           this.products.addMovement(item.productId, 'SALE', -item.quantity, product.quantity, `Venda ${saleNumber}`);
         }
       }
-      this.cash.add({ saleId: id, entryType: 'IN', category: 'SALE', description: `Venda ${saleNumber}${cardPayment ? ` — Cartão ${cardPayment.installments}x` : ''}`, amountCents: totalCents, occurredOn: localDate() });
+      this.cash.add({ saleId: id, entryType: 'IN', category: 'SALE', description: `Venda ${saleNumber}${cardPayment ? ` — Cartão ${cardPayment.installments}x${cardPayment.feePassed ? '' : ' (taxa absorvida)'}` : ''}`, amountCents: totalCents, occurredOn: localDate() });
       return this.sales.find(id);
     });
     return saleView(createSale());

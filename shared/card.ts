@@ -15,6 +15,7 @@ export const CARD_FEE_BPS: Readonly<Record<number, number>> = Object.freeze({
 
 export type CardPayment = {
   installments: number;
+  feePassed: boolean;
   feeBps: number;
   feeCents: number;
   grossCents: number;
@@ -22,12 +23,17 @@ export type CardPayment = {
   netCents: number;
 };
 
-export const calculateCardPayment = (desiredNetCents: number, installments: number): CardPayment => {
+export const calculateCardPayment = (desiredNetCents: number, installments: number, feePassed = true): CardPayment => {
   if (!Number.isInteger(desiredNetCents) || desiredNetCents < 0) throw new Error('Valor da venda inválido para cartão.');
   const feeBps = CARD_FEE_BPS[installments];
   if (feeBps === undefined) throw new Error('Quantidade de parcelas inválida.');
 
   const remainingBps = 10_000 - feeBps;
+  if (!feePassed) {
+    const grossCents = desiredNetCents;
+    const feeCents = Math.round((grossCents * feeBps) / 10_000);
+    return { installments, feePassed, feeBps, feeCents, grossCents, installmentCents: Math.floor(grossCents / installments), netCents: grossCents - feeCents };
+  }
   let installmentCents = Math.ceil((desiredNetCents * 10_000) / (remainingBps * installments));
   let grossCents = installmentCents * installments;
   let feeCents = Math.round((grossCents * feeBps) / 10_000);
@@ -38,5 +44,5 @@ export const calculateCardPayment = (desiredNetCents: number, installments: numb
     feeCents = Math.round((grossCents * feeBps) / 10_000);
   }
 
-  return { installments, feeBps, feeCents, grossCents, installmentCents, netCents: grossCents - feeCents };
+  return { installments, feePassed, feeBps, feeCents, grossCents, installmentCents, netCents: grossCents - feeCents };
 };

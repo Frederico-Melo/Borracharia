@@ -15,6 +15,10 @@ describe('card payment', () => {
     expect(calculateCardPayment(10_000, 1)).toMatchObject({ feeBps: 0, feeCents: 0, grossCents: 10_000, installmentCents: 10_000, netCents: 10_000 });
   });
 
+  it('mantém o valor ao cliente quando a loja absorve a taxa', () => {
+    expect(calculateCardPayment(10_000, 2, false)).toMatchObject({ feePassed: false, feeBps: 399, grossCents: 10_000, feeCents: 399, installmentCents: 5_000, netCents: 9_601 });
+  });
+
   it('usa a tabela de taxas configurada para duas a doze parcelas', () => {
     expect(CARD_FEE_BPS).toMatchObject({ 2: 399, 3: 499, 4: 659, 5: 709, 6: 769, 7: 789, 8: 859, 9: 926, 10: 999, 11: 1179, 12: 1199 });
   });

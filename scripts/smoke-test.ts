@@ -111,6 +111,20 @@ async function main() {
   assert.equal(removeCardSaleResult.response.status, 204);
   const cashAfterCardRemoval = await request('/cash');
   assert.equal((cashAfterCardRemoval.payload as { totals: { balance: number } }).totals.balance, 0);
+  const absorbedFeeSaleResult = await request('/sales', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ paymentMethod: 'CARD', cardInstallments: 2, cardFeePassed: false, items: [{ itemType: 'LABOR', description: 'Serviço com taxa absorvida', quantity: 1, unitPrice: 100 }] }),
+  });
+  assert.equal(absorbedFeeSaleResult.response.status, 201);
+  const absorbedFeeSale = absorbedFeeSaleResult.payload as { id: number; total: number; profit: number; cardFeePassed: boolean; cardFee: number; cardGrossTotal: number; cardInstallmentAmount: number };
+  assert.deepEqual({ total: absorbedFeeSale.total, profit: absorbedFeeSale.profit, passed: absorbedFeeSale.cardFeePassed, fee: absorbedFeeSale.cardFee, gross: absorbedFeeSale.cardGrossTotal, installment: absorbedFeeSale.cardInstallmentAmount }, { total: 96.01, profit: 96.01, passed: false, fee: 3.99, gross: 100, installment: 50 });
+  const cashWithAbsorbedFee = await request('/cash');
+  assert.equal((cashWithAbsorbedFee.payload as { totals: { balance: number } }).totals.balance, 96.01);
+  assert.ok((cashWithAbsorbedFee.payload as { entries: Array<{ description: string }> }).entries.some((entry) => entry.description.includes('taxa absorvida')));
+  const removeAbsorbedFeeSaleResult = await request(`/sales/${absorbedFeeSale.id}`, { method: 'DELETE' });
+  assert.equal(removeAbsorbedFeeSaleResult.response.status, 204);
+  const cashAfterAbsorbedFeeRemoval = await request('/cash');
+  assert.equal((cashAfterAbsorbedFeeRemoval.payload as { totals: { balance: number } }).totals.balance, 0);
   const manualEntryResult = await request('/cash', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ entryType: 'OUT', category: 'EXPENSE', description: 'Despesa lançada por engano', amount: 45, occurredOn: '2026-08-06' }),

@@ -5,6 +5,7 @@ export const saleSchema = z.object({
   vehicleModel: z.string().trim().max(120).optional().nullable(),
   paymentMethod: z.enum(['CASH', 'PIX', 'CARD', 'OTHER']),
   cardInstallments: z.coerce.number().int().min(1).max(12).optional().nullable(),
+  cardFeePassed: z.boolean().optional().nullable(),
   notes: z.string().trim().max(1000).optional().nullable(),
   discountType: z.enum(['FIXED', 'PERCENT']).optional().nullable(),
   discountValue: z.coerce.number().min(0).default(0),
