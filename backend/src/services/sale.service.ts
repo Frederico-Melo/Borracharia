@@ -72,7 +72,7 @@ export class SaleService {
         subtotalCents, discountType, discountValue: discountType === 'PERCENT' ? Math.round(discountValue * 100) : toCents(discountValue),
         discountCents, totalCents, profitCents: totalCents - totalCostCents, paymentMethod: input.paymentMethod,
         cardInstallments: cardPayment?.installments ?? null, cardFeeBps: cardPayment?.feeBps ?? null, cardFeeCents: cardPayment?.feeCents ?? null,
-        cardGrossCents: cardPayment?.grossCents ?? null, cardInstallmentCents: cardPayment?.installmentCents ?? null, cardFeePassed: cardPayment ? Number(cardPayment.feePassed) : null,
+        cardGrossCents: cardPayment?.grossCents ?? null, cardInstallmentCents: cardPayment?.installmentCents ?? null, cardFeePassed: cardPayment ? Number(cardPayment.feePassed) : 1,
         notes: input.notes || null, soldAt: localDateTime(),
       });
       const saleNumber = `V${localDate().replaceAll('-', '')}-${String(id).padStart(5, '0')}`;
